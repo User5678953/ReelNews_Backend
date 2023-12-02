@@ -1,12 +1,11 @@
 from django.shortcuts import render
-
-# Create your views here.
+import os
 from newsapi import NewsApiClient
 from django.http import JsonResponse
 from datetime import datetime, timedelta
 
 # Initialize
-newsapi = NewsApiClient(api_key='d446e80f75794e569d031dde304a73f2')
+newsapi = NewsApiClient(api_key=os.getenv('NEWS_API_KEY'))
 
 def top_headlines(request):
     # Fetch query parameters
