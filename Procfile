@@ -1,1 +1,2 @@
-web: gunicorn news_app.wsgi
+web: gunicorn news_api.wsgi
+
