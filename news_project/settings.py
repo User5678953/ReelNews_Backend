@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'news_app',
+    'auth_app',
     'corsheaders',
     'rest_framework',
 ]
@@ -48,7 +49,16 @@ MIDDLEWARE = [
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 
-ROOT_URLCONF = 'news_api.urls'
+ROOT_URLCONF = 'news_project.urls'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
 
 TEMPLATES = [
     {
@@ -66,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'news_api.wsgi.application'
+WSGI_APPLICATION = 'news_project.wsgi.application'
 
 
 # Database
