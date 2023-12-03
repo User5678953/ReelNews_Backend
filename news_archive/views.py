@@ -40,9 +40,38 @@ def getRoutes(request):
         'method': 'DELETE',
         'body': None,
         'description': 'Delete a specific item from the archive.'
+    },
+    {
+        'Endpoint': '/register/',
+        'method': 'POST',
+        'body': 'User registration data',
+        'description': 'Register a new user.'
+    },
+    {
+        'Endpoint': '/logout/',
+        'method': 'POST',
+        'body': None,
+        'description': 'Logout the user.'
+    },
+    {
+        'Endpoint': '/top-headlines/',
+        'method': 'GET',
+        'body': None,
+        'description': 'Get top headlines.'
+    },
+    {
+        'Endpoint': '/all-articles/',
+        'method': 'GET',
+        'body': None,
+        'description': 'Get all articles.'
+    },
+    {
+        'Endpoint': '/sources/',
+        'method': 'GET',
+        'body': None,
+        'description': 'Get available news sources.'
     }
 ]
-
     return Response(routes)
 
 @api_view(['GET'])
