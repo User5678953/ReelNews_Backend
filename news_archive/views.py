@@ -12,61 +12,61 @@ from .models import Archive
 def getRoutes(request):
     routes = [
     {
-        'Endpoint': '/archive/',
+        'Endpoint': '/archives/',
         'method': 'GET',
         'body': None,
         'description': 'List all items in the archive.'
     },
     {
-        'Endpoint': '/archive/<id>/',
+        'Endpoint': '/archives/<id>/',
         'method': 'GET',
         'body': None,
         'description': 'Retrieve a specific item from the archive.'
     },
     {
-        'Endpoint': '/archive/create/',
+        'Endpoint': '/archives/create/',
         'method': 'POST',
         'body': 'Data for new item',
         'description': 'Create a new item in the archive.'
     },
     {
-        'Endpoint': '/archive/update/<id>/',
+        'Endpoint': '/archives/update/<id>/',
         'method': 'PUT',
         'body': 'Updated data for item',
         'description': 'Update a specific item in the archive.'
     },
     {
-        'Endpoint': '/archive/delete/<id>/',
+        'Endpoint': '/archives/delete/<id>/',
         'method': 'DELETE',
         'body': None,
         'description': 'Delete a specific item from the archive.'
     },
     {
-        'Endpoint': '/register/',
+        'Endpoint': 'api/auth/register/',
         'method': 'POST',
         'body': 'User registration data',
         'description': 'Register a new user.'
     },
     {
-        'Endpoint': '/logout/',
+        'Endpoint': 'api/auth/logout/',
         'method': 'POST',
         'body': None,
         'description': 'Logout the user.'
     },
     {
-        'Endpoint': '/top-headlines/',
+        'Endpoint': 'news/top-headlines/',
         'method': 'GET',
         'body': None,
         'description': 'Get top headlines.'
     },
     {
-        'Endpoint': '/all-articles/',
+        'Endpoint': 'news/all-articles/',
         'method': 'GET',
         'body': None,
         'description': 'Get all articles.'
     },
     {
-        'Endpoint': '/sources/',
+        'Endpoint': 'news/sources/',
         'method': 'GET',
         'body': None,
         'description': 'Get available news sources.'
