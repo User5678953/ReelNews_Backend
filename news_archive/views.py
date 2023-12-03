@@ -106,3 +106,26 @@ def deleteArchive(request, pk):
     archive = Archive.objects.get(id=pk)
     archive.delete()
     return Response ("Article was deleted")
+
+@api_view(['POST'])
+@permission_classes([AllowAny])  # Adjust permissions as necessary
+def save_article(request):
+    data = request.data
+
+    try:
+        # Create new Archive object from the provided data
+        archive = Archive.objects.create(
+            user=request.user if request.user.is_authenticated else None,
+            title=data['title'],
+            content=data.get('content', ''),
+            author=data.get('author'),
+            source=data.get('source'),
+            url=data.get('url')
+        )
+        serializer = ArchiveSerializer(archive, many=False)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    except KeyError as e:
+        return Response({'error': f'Missing key in request: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

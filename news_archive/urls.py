@@ -5,8 +5,9 @@ urlpatterns = [
     path('', views.getRoutes),
     path('archives/', views.getArchives),
     path('archives/create/', views.createArchive),
-    path('archives/update/<str:pk>', views.updateArchive),
-    path('archives/delete/<str:pk>', views.deleteArchive),
-    path('archives/<str:pk>/', views.getArchive)
+    path('archives/update/<str:pk>/', views.updateArchive),
+    path('archives/delete/<str:pk>/', views.deleteArchive),
+     path('archives/save/', views.save_article), 
+    path('archives/<str:pk>/', views.getArchive),
    
 ]
