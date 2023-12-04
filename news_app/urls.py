@@ -1,9 +1,8 @@
 from django.urls import path
-from . import views
-
+from .views import TopHeadlinesView, AllArticlesView, SourcesView
 
 urlpatterns = [
-    path('top-headlines/', views.top_headlines, name='top-headlines'),
-    path('all-articles/', views.all_articles, name='all-articles'),
-    path('sources/', views.sources, name='sources'),
+    path('top-headlines/', TopHeadlinesView.as_view(), name='top-headlines'),
+    path('all-articles/', AllArticlesView.as_view(), name='all-articles'),
+    path('sources/', SourcesView.as_view(), name='sources'),
 ]

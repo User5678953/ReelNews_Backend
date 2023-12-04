@@ -1,18 +1,22 @@
-from rest_framework import generics, permissions
-from .serializers import UserSerializer
 
-class CreateUserView(generics.CreateAPIView):
-    serializer_class = UserSerializer
-    permission_classes = [permissions.AllowAny] 
-
-from rest_framework.response import Response
+from django.contrib.auth.models import User
 from rest_framework.views import APIView
-from rest_framework import status, permissions
+from rest_framework.response import Response
+from rest_framework import status
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from rest_framework.permissions import AllowAny
 
-class LogoutView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
+@method_decorator(csrf_exempt, name='dispatch')
+class RegisterView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
-        response = Response()
-        response.data = {"message": "Logged out successfully"}
-        return response
+        username = request.data.get('username')
+        password = request.data.get('password')
+        email = request.data.get('email')
+        if not username or not password or not email:
+            return Response({'error': 'Missing username, password or email'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.create_user(username=username, email=email, password=password)
+        return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+

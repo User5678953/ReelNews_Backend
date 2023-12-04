@@ -1,8 +1,7 @@
 
 from pathlib import Path
-
 from dotenv import load_dotenv
-
+from datetime import timedelta
 import dj_database_url
 import os
 
@@ -64,6 +63,11 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 TEMPLATES = [

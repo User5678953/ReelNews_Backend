@@ -1,6 +1,5 @@
 from django.contrib import admin
-
+from .models import NewsArchive
 
 # Register your models here.
-from .models import Archive
-admin.site.register(Archive)
+admin.site.register(NewsArchive)

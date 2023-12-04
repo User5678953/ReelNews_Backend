@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Archive
+from .models import NewsArchive
 
 class ArchiveSerializer(ModelSerializer):
     class Meta:
-        model = Archive
+        model = NewsArchive
         fields = '__all__'
