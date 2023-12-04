@@ -10,10 +10,11 @@ class NewsArchive(models.Model):
     url = models.URLField(max_length=500)
     url_to_image = models.URLField(max_length=500, null=True, blank=True)
     published_at = models.DateTimeField()
-    content = models.TextField(null=True, blank=True)
+    content = models.TextField(default="")
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    source = models.CharField(max_length=255, null=True, blank=True)
+    source = models.CharField(max_length=255, default="") 
 
     def __str__(self):
         return self.title
+
 

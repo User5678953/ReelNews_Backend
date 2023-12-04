@@ -24,12 +24,6 @@ def getRoutes(request):
         "description": "Retrieve a specific item from the archive."
     },
     {
-        "Endpoint": "/archives/create/",
-        "method": "POST",
-        "body": "Data for new item",
-        "description": "Create a new item in the archive."
-    },
-    {
         "Endpoint": "/archives/update/<id>/",
         "method": "PUT",
         "body": "Updated data for item",
@@ -88,31 +82,6 @@ def getArchive(request, pk):
     serializer = ArchiveSerializer(archive, many=False)
     return Response(serializer.data)
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def createArchive(request):
-    data = request.data
-
-    try:
-        # Create new Archive object
-        archive = NewsArchive.objects.create(
-            source_id=data.get('source_id'),
-            source_name=data.get('source_name'),
-            author=data.get('author'),
-            title=data['title'],
-            description=data.get('description'),
-            url=data.get('url'),
-            url_to_image=data.get('url_to_image'),
-            published_at=data.get('published_at'),
-            content=data.get('content', '')
-        )
-        serializer = ArchiveSerializer(archive, many=False)
-        return Response(serializer.data)
-    
-    except KeyError as e:
-
-        return Response({'error': f'Missing key in request: {str(e)}'})
-    
 @api_view(['PUT', 'PATCH'])
 @permission_classes([AllowAny])
 def updateArchive(request, pk):
@@ -145,17 +114,31 @@ def save_article(request):
     data = request.data
 
     try:
-        # Create new Archive object from the provided data
-        archive = NewsArchive.objects.create(
-            user=request.user if request.user.is_authenticated else None,
-            title=data['title'],
-            content=data.get('content', ''),
-            author=data.get('author'),
-            source=data.get('source'),
-            url=data.get('url')
-        )
-        serializer = ArchiveSerializer(archive, many=False)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        user = request.user
+
+        # Check if the article with the same title already exists in the user's archive
+        existing_article = NewsArchive.objects.filter(title=data['title'], user=user).first()
+        
+        if existing_article:
+            # Article already exists in the user's archive, no need to save it again
+            return Response({'message': 'Article already saved in your archive.'}, status=status.HTTP_200_OK)
+        else:
+            # Article doesn't exist in the user's archive, create it and associate with the user
+            article = NewsArchive(
+                source_id=data.get('source_id'),
+                source_name=data.get('source_name'),
+                author=data.get('author'),
+                title=data['title'],
+                description=data.get('description'),
+                url=data.get('url'),
+                url_to_image=data.get('url_to_image'),
+                published_at=data.get('published_at'),
+                content=data.get('content', ''),
+                user=user 
+            )
+            article.save()  # Save the article
+            serializer = ArchiveSerializer(article, many=False)
+            return Response({'message': 'Article saved to your archive.', 'data': serializer.data}, status=status.HTTP_201_CREATED)
     
     except KeyError as e:
         return Response({'error': f'Missing key in request: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
