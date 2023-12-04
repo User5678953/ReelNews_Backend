@@ -23,7 +23,7 @@ SECRET_KEY = 'django-insecure-!$=#_66q=zwq^a4jem^$dgda%ot_93@7+hw7c7mryi%0p)!jku
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://reelnews-api-fe5e8d8c10e8.herokuapp.com/', 'localhost']
 
 
 # Application definition
