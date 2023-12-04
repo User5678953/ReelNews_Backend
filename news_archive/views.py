@@ -5,6 +5,8 @@ from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny
 from .serializers import ArchiveSerializer
 from .models import NewsArchive
+from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
 
 
 @api_view(['GET'])
@@ -69,47 +71,45 @@ def getRoutes(request):
     return Response(routes)
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])  # Only authenticated users can access their archives
 def getArchives(request):
-    archives = NewsArchive.objects.all()
+    user = request.user
+    archives = NewsArchive.objects.filter(user=user)  # Fetch archives for the logged-in user
     serializer = ArchiveSerializer(archives, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])  # Only authenticated users can access specific archives
 def getArchive(request, pk):
-    archive = NewsArchive.objects.get(id=pk)
+    user = request.user
+    archive = get_object_or_404(NewsArchive, id=pk, user=user)  # Fetch the archive if it belongs to the user
     serializer = ArchiveSerializer(archive, many=False)
     return Response(serializer.data)
 
 @api_view(['PUT', 'PATCH'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])  # Only authenticated users can update their archives
 def updateArchive(request, pk):
-    try:
-        archive = NewsArchive.objects.get(pk=pk)
-        
-        # Use request.data to access the request body data
-        serializer = ArchiveSerializer(archive, data=request.data, partial=request.method == 'PATCH')
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    user = request.user
+    archive = get_object_or_404(NewsArchive, pk=pk, user=user)  # Fetch the archive if it belongs to the user
 
-    except NewsArchive.DoesNotExist:
-        return Response({'error': 'Archive not found'}, status=status.HTTP_404_NOT_FOUND)
-    except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    # Use request.data to access the request body data
+    serializer = ArchiveSerializer(archive, data=request.data, partial=request.method == 'PATCH')
+    
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
-@permission_classes([AllowAny])   
+@permission_classes([IsAuthenticated])  # Only authenticated users can delete their archives
 def deleteArchive(request, pk):
-    archive = NewsArchive.objects.get(id=pk)
+    user = request.user
+    archive = get_object_or_404(NewsArchive, pk=pk, user=user)  # Fetch the archive if it belongs to the user
     archive.delete()
-    return Response ("Article was deleted")
+    return Response({"message": "Article was deleted"}, status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['POST'])
-@permission_classes([AllowAny])  
+@permission_classes([IsAuthenticated])  
 def save_article(request):
     data = request.data
 

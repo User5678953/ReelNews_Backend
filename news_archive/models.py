@@ -12,7 +12,6 @@ class NewsArchive(models.Model):
     published_at = models.DateTimeField()
     content = models.TextField(default="")
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    source = models.CharField(max_length=255, default="") 
 
     def __str__(self):
         return self.title
