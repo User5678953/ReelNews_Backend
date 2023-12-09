@@ -1,22 +1,32 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import os
+import logging
 from newsapi import NewsApiClient
 from datetime import datetime, timedelta
 from rest_framework.permissions import AllowAny
 
-# Initialize
-newsapi = NewsApiClient(api_key=os.getenv('NEWS_API_KEY'))
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 class TopHeadlinesView(APIView):
     permission_classes = [AllowAny]
+    
     def get(self, request):
-        query = request.query_params.get('q', 'world')
-        category = request.query_params.get('category', 'general')
-        language = request.query_params.get('language', 'en')
-        country = request.query_params.get('country', 'us')
+        query = request.query_params.get('q')
+        category = request.query_params.get('category')
+        language = request.query_params.get('language')
+        country = request.query_params.get('country')
 
+        # Log the received parameters
+        logger.info(f'Received parameters: Query={query}, Category={category}, Language={language}, Country={country}')
+
+        newsapi = NewsApiClient(api_key=os.getenv('NEWS_API_KEY'))
         response = newsapi.get_top_headlines(q=query, category=category, language=language, country=country)
+
+        # Log the raw response
+        logger.info(f'NewsAPI Response: {response}')
+
         return Response(response)
 
 class AllArticlesView(APIView):
